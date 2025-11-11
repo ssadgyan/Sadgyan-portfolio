@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradient-bg {
+  background: radial-gradient(1200px 400px at 10% 10%, rgba(59,130,246,0.15), transparent 50%),
+              radial-gradient(800px 300px at 90% 20%, rgba(29,78,216,0.12), transparent 50%);
+}
+.container-max { max-width: 1200px; }
+.card { @apply p-5 rounded-2xl border border-slate-200 bg-white shadow-sm; }
+.link-btn { @apply px-4 py-2 rounded-xl border border-primary-600 text-primary-700 hover:bg-primary-50 transition; }
+.primary-btn { @apply px-4 py-2 rounded-xl bg-primary-600 text-white hover:bg-primary-700 transition; }
