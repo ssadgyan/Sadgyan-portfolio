@@ -48,6 +48,21 @@ html { scroll-behavior: smooth; }
   filter: blur(30px);
   pointer-events: none;
 }
+.hero-glow {
+  position: relative;
+}
+.hero-glow::before {
+  content: "";
+  position: absolute;
+  top: -80px;
+  left: -80px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: rgba(59,130,246,0.25);
+  filter: blur(120px);
+  z-index: -1;
+}
 .dark .hero-glow::before {
   background: radial-gradient(closest-side, rgba(59,130,246,0.20), rgba(59,130,246,0) 70%);
 }

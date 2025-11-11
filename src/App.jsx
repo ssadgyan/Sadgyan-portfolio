@@ -1,5 +1,45 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
+
+/* ---------- Global reveal animation config ---------- */
+const reveal = {
+  hidden: { opacity: 0, y: 40 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
+};
+/* ---------- Rotating Tagline ---------- */
+const taglines = [
+  "Full Stack Developer",
+  "AI / Machine Learning",
+  "Problem Solver",
+  "Open Source Learner",
+];
+
+function DynamicTagline() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((i) => (i + 1) % taglines.length);
+    }, 2000); // changes every 2 sec
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <motion.span
+      key={taglines[index]}
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="text-primary-600 dark:text-primary-300 font-semibold"
+    >
+      {taglines[index]}
+    </motion.span>
+  );
+}
 
 /* ---------- Animations ---------- */
 const fadeIn = {
@@ -23,6 +63,22 @@ function WhatsAppButton() {
         <path d="M26.7 5.3C23.9 2.5 20.2 1 16.2 1 8.5 1 2.2 7.3 2.2 15c0 2.4.6 4.7 1.7 6.7L2 31l9.5-1.8c1.9 1 4.1 1.6 6.5 1.6 7.7 0 14-6.3 14-14 0-3.9-1.5-7.6-4.3-10.5zM16 28.2c-2.1 0-4.1-.6-5.8-1.6l-.4-.2-5.6 1.1 1.1-5.5-.3-.5c-1.1-1.9-1.6-4-1.6-6.1C3.5 8.3 9.1 2.8 16.2 2.8c3.2 0 6.2 1.2 8.4 3.5 2.3 2.3 3.5 5.3 3.5 8.5-.1 6.6-5.4 11.9-12.1 11.9z" />
       </svg>
     </a>
+  );
+}
+/* ---------- Scroll Progress Bar ---------- */
+function ScrollProgressBar() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 20,
+    restDelta: 0.001,
+  });
+
+  return (
+    <motion.div
+      style={{ scaleX }}
+      className="fixed left-0 top-0 right-0 h-1 origin-left z-[60] bg-primary-600"
+    />
   );
 }
 
@@ -81,13 +137,15 @@ function ContactForm() {
 const Section = ({ id, title, children }) => (
   <motion.section
     id={id}
-    className="container-max mx-auto px-6 py-16"
+    className="container-max mx-auto px-6 py-16 scroll-mt-24"
     initial="hidden"
     whileInView="show"
     viewport={{ once: true, amount: 0.2 }}
-    variants={fadeIn}
+    variants={reveal}
   >
-    <h2 className="text-3xl md:text-4xl font-bold text-primary-800 dark:text-primary-300 mb-6">{title}</h2>
+    <h2 className="text-3xl md:text-4xl font-bold text-primary-800 dark:text-primary-300 mb-6">
+      {title}
+    </h2>
     <div className="text-slate-700 dark:text-slate-300">{children}</div>
   </motion.section>
 );
@@ -124,15 +182,20 @@ export default function App() {
 
       {/* HERO */}
       <section className="container-max mx-auto px-6 pt-16 pb-10 grid md:grid-cols-[1.2fr,0.8fr] gap-10 items-center">
-        <div /* className='hero-wrap hero-glow' */>
+
+        {/* LEFT SIDE TEXT */}
+        <div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-4xl md:text-5xl font-extrabold leading-tight text-primary-900 dark:text-primary-200"
           >
-            Full Stack Developer <span className="text-primary-600">&nbsp;| AI/ML</span>
+            Hi, I'm Sadgyan Singh 👋
+            <br />
+            <DynamicTagline />
           </motion.h1>
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -165,11 +228,12 @@ export default function App() {
           </div>
         </div>
 
+        {/* RIGHT SIDE IMAGE WITH GLOW */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
-          className="flex justify-center"
+          className="flex justify-center hero-glow"
         >
           <img
             src="/avatar.png"
@@ -177,7 +241,9 @@ export default function App() {
             className="w-56 h-65 rounded-full object-cover border-4 border-white shadow-lg"
           />
         </motion.div>
+
       </section>
+
 
       {/* ABOUT */}
       <Section id="about" title="About">
@@ -190,33 +256,66 @@ export default function App() {
 
       {/* SKILLS */}
       <Section id="skills" title="Skills">
-        <ul className="grid grid-cols-2 md:grid-cols-3 gap-2 list-disc list-inside">
-          <li>Java, Python, C, C++</li>
-          <li>MERN (MongoDB, Express, React, Node)</li>
-          <li>AWS, MongoDB Atlas</li>
-          <li>Pandas, NumPy, Plotly, Streamlit</li>
-          <li>Machine Learning Basics</li>
-          <li>Git, GitHub, Vercel</li>
-        </ul>
+        <motion.ul
+          className="grid grid-cols-2 md:grid-cols-3 gap-3"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: { staggerChildren: 0.08 }
+            }
+          }}
+        >
+          {[
+            "Java", "Python", "C", "C++", "MERN Stack", "MongoDB", "Express",
+            "React", "Node.js", "AWS", "Git", "NumPy", "Pandas", "Streamlit",
+            "Plotly", "Machine Learning", "Vercel"
+          ].map((skill) => (
+            <motion.li
+              key={skill}
+              variants={reveal}
+              whileHover={{ scale: 1.08 }}
+              className="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-600 
+                   bg-white/60 dark:bg-slate-800/40 backdrop-blur cursor-default"
+            >
+              {skill}
+            </motion.li>
+          ))}
+        </motion.ul>
       </Section>
+
 
       {/* PROJECTS */}
       <Section id="projects" title="Projects">
         <div className="grid md:grid-cols-2 gap-6">
-          <motion.div className="card" variants={fadeIn} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
+
+          <motion.div
+            whileHover={{ scale: 1.04, rotateX: 4, rotateY: -4 }}
+            transition={{ type: "spring", stiffness: 160, damping: 12 }}
+            className="card"
+          >
             <h3 className="font-semibold text-lg">Handyman (Home Service Platform)</h3>
             <p className="mt-2 text-sm">MERN-based platform for booking home repair & maintenance services.</p>
             <div className="mt-3 text-sm text-primary-700 dark:text-primary-300">Tech: MERN, MongoDB, AWS</div>
           </motion.div>
 
-          <motion.div className="card" variants={fadeIn} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
+          <motion.div
+            whileHover={{ scale: 1.04, rotateX: 4, rotateY: -4 }}
+            transition={{ type: "spring", stiffness: 160, damping: 12 }}
+            className="card"
+          >
             <h3 className="font-semibold text-lg">FraudGuardian (Credit Card Fraud Detection)</h3>
-            <a href="https://fraudgradian.vercel.app/" target="_blank" rel="noreferrer" className="text-sm underline text-primary-700 dark:text-primary-300">
+            <a href="https://fraudgradian.vercel.app/" target="_blank" rel="noreferrer"
+              className="text-sm underline text-primary-700 dark:text-primary-300">
               fraudgradian.vercel.app
             </a>
             <p className="mt-2 text-sm">ML-based system to detect fraudulent transactions. Led a team of 3.</p>
             <div className="mt-3 text-sm text-primary-700 dark:text-primary-300">Tech: Python, Jupyter, MERN, MongoDB, Render, Vercel</div>
           </motion.div>
+
         </div>
       </Section>
 
