@@ -2,11 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-.gradient-bg {
-  background: radial-gradient(1200px 400px at 10% 10%, rgba(59,130,246,0.15), transparent 50%),
-              radial-gradient(800px 300px at 90% 20%, rgba(29,78,216,0.12), transparent 50%);
-}
+/* --- Global niceties (optional) --- */
+html { scroll-behavior: smooth; }
+::selection { background: #2563eb22; }
+
+/* --- Layout helper --- */
 .container-max { max-width: 1200px; }
+
+/* --- Background wrapper --- */
+/* Light theme gradient */
+.gradient-bg {
+  background:
+    radial-gradient(1200px 400px at 10% 10%, rgba(59,130,246,0.15), transparent 50%),
+    radial-gradient(800px 300px at 90% 20%, rgba(29,78,216,0.12), transparent 50%);
+}
+
+/* Dark theme gradient (slightly subtler) */
+.dark .gradient-bg {
+  background:
+    radial-gradient(1200px 400px at 10% 10%, rgba(59,130,246,0.10), transparent 50%),
+    radial-gradient(800px 300px at 90% 20%, rgba(29,78,216,0.08), transparent 50%);
+}
+
+/* --- Cards --- */
 .card { @apply p-5 rounded-2xl border border-slate-200 bg-white shadow-sm; }
+.dark .card { @apply border-slate-700 bg-slate-900 text-slate-200; }
+
+/* --- Buttons --- */
 .link-btn { @apply px-4 py-2 rounded-xl border border-primary-600 text-primary-700 hover:bg-primary-50 transition; }
+.dark .link-btn { @apply border-slate-600 text-primary-300 hover:bg-slate-800; }
+
 .primary-btn { @apply px-4 py-2 rounded-xl bg-primary-600 text-white hover:bg-primary-700 transition; }
+.dark .primary-btn { @apply bg-primary-600 hover:bg-primary-700; }
