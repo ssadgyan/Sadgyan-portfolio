@@ -207,7 +207,7 @@ export default function App() {
 
           <div className="mt-6 flex gap-3">
             <a
-              href="https://github.com/ssadgyan"
+              href="https://github.com/SadgyanSingh"
               target="_blank"
               rel="noreferrer"
               className="primary-btn"
